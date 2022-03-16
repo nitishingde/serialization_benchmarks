@@ -1,0 +1,3 @@
+[submodule "lib/bitsery"]
+	path = lib/bitsery
+	url = https://github.com/fraillt/bitsery.git
