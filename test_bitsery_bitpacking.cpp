@@ -2,10 +2,11 @@
 #include "TestData.h"
 #include <bitsery/bitsery.h>
 #include <bitsery/adapter/buffer.h>
-#include <bitsery/traits/vector.h>
 #include <bitsery/traits/array.h>
 #include <bitsery/traits/string.h>
+#include <bitsery/traits/vector.h>
 #include <bitsery/ext/inheritance.h>
+#include <bitsery/ext/value_range.h>
 
 
 template<typename S>
@@ -16,12 +17,20 @@ void serialize(S& s, BaseData& o) {
 template<typename S>
 void serialize(S& s, TestData& o) {
     s.container4b(o.floats);
-    s.container8b(o.doubles, 1e6);
+//    s.container8b(o.doubles, 1e6);
+    s.enableBitPacking([&o](typename S::BPEnabledType& sbp) {
+        sbp.container(o.doubles, 1e6, [](typename S::BPEnabledType &sbp, uint64_t val) {
+//            constexpr bitsery::ext::ValueRange<double> range{0., 1000., .1};
+            constexpr bitsery::ext::ValueRange<uint64_t> range{0, 1023};
+            sbp.ext(val, range);
+        });
+    });
     s.ext(o, bitsery::ext::BaseClass<BaseData>{});
 }
 
 int main() {
     START_BENCHMARKING_SESSION("bitsery");
+    globalTestData.init();
 
     using Buffer = std::string;//std::vector<uint8_t>;
     using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
@@ -49,6 +58,7 @@ int main() {
         auto [buffer, writtenSize] = serializeTest1(globalTestData);
         bufferSize = writtenSize;
         auto res = deserializeTest1(buffer, writtenSize);
+
         if(!testSerializedData(res)) {
             printf(RED("Error in bitsery!\n"));
             return 0;

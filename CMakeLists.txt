@@ -24,6 +24,12 @@ target_link_libraries(test_bitsery
         Bitsery::bitsery
 )
 
+add_executable(test_bitsery_bitpacking test_bitsery_bitpacking.cpp Utility.cpp)
+target_link_libraries(test_bitsery_bitpacking
+    PUBLIC
+        Bitsery::bitsery
+)
+
 add_executable(test_cereal test_cereal.cpp Utility.cpp)
 target_link_libraries(test_cereal
     PUBLIC
