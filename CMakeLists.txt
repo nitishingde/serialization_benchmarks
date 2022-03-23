@@ -3,7 +3,14 @@ project(serialization_benchmarks)
 
 set(CMAKE_CXX_STANDARD 20)
 
+add_subdirectory(lib/bitsery)
 add_subdirectory(lib/cereal)
+
+add_executable(test_bitsery test_bitsery.cpp Utility.cpp)
+target_link_libraries(test_bitsery
+    PUBLIC
+        Bitsery::bitsery
+)
 
 add_executable(test_cereal test_cereal.cpp Utility.cpp)
 target_link_libraries(test_cereal
