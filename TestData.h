@@ -11,7 +11,7 @@ struct BaseData {
 
 struct TestData: public BaseData {
     float floats[size_t(1e6)];
-    std::vector<uint64_t> doubles;
+    std::vector<double> doubles;
     explicit TestData(std::string name = "", size_t size = 0, bool init = false): BaseData(name) {
         doubles.resize(size, 0);
         if(init) this->init();
