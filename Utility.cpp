@@ -55,7 +55,7 @@ void benchmark::Profiler::flush() const {
     for(const auto &it: mExecutions) {
         auto &executionTime = it.second;
         printf(
-                "| " CYAN("%-32.32s") " | " YELLOW("%-64.64s") " | %-10zu | " BLUE("%.9f") "s | " GREEN("%.9f") "s | " RED("%.9f") "s |\n",
+                "| " CYAN("%-32.32s") " | " YELLOW("%-64.64s") " | %-10zu | " BLUE("%10.6f") "ms | " GREEN("%10.6f") "ms | " RED("%10.6f") "ms |\n",
                 mSession.c_str(),
                 it.first.c_str(),
                 executionTime.size(),
@@ -112,6 +112,6 @@ benchmark::Timer::~Timer() {
     auto endPoint = std::chrono::high_resolution_clock::now();
     Profiler::getInstance()->log(ProfileResult {
             .name = mName,
-            .elapsedTime = double(std::chrono::duration_cast<std::chrono::nanoseconds>(endPoint - mStartPoint).count()) / 1.e9
+            .elapsedTime = double(std::chrono::duration_cast<std::chrono::nanoseconds>(endPoint - mStartPoint).count()) / 1.e6
     });
 }
